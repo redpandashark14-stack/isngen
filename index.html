@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ISN Generator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    label { display: block; margin-top: 10px; }
+    textarea { width: 100%; height: 200px; margin-top: 10px; }
+    button { margin-top: 15px; padding: 8px 14px; }
+  </style>
+</head>
+<body>
+
+<h1>ISN Generator</h1>
+
+<label>
+  Topic:
+  <input type="text" id="topic" placeholder="Type your topic here">
+</label>
+
+<label>
+  Assignment Upload (optional):
+  <input type="file" id="assignmentFile">
+</label>
+
+<button id="generateBtn">Generate ISN</button>
+
+<h2>Output</h2>
+<textarea id="output" readonly></textarea>
+
+<script>
+  function randomChoice(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // ---------------------------
+  // ACROSTIC (one word per letter)
+  // ---------------------------
+  function generateAcrostic(topic) {
+    const letters = topic.replace(/\s+/g, '').toUpperCase().split('');
+    const wordBank = {
+      A: ["Amazing","Active","Adaptive","Atomic"],
+      B: ["Bold","Balanced","Bright","Basic"],
+      C: ["Creative","Curious","Critical","Core"],
+      D: ["Dynamic","Deep","Driven","Direct"],
+      E: ["Essential","Endless","Energetic","Exact"],
+      F: ["Focused","Fundamental","Fresh","Factual"],
+      G: ["Grounded","Growing","Global","Guided"],
+      H: ["Helpful","Hidden","Human","Harmonic"],
+      I: ["Important","Inner","Infinite","Ideal"],
+      J: ["Just","Joyful","Joint","Judicious"],
+      K: ["Key","Known","Kinetic","Kind"],
+      L: ["Logical","Living","Layered","Luminous"],
+      M: ["Meaningful","Major","Modern","Measured"],
+      N: ["Natural","Notable","New","Necessary"],
+      O: ["Original","Open","Ordered","Optimal"],
+      P: ["Powerful","Primary","Pure","Practical"],
+      Q: ["Quiet","Quick","Qualified","Questing"],
+      R: ["Real","Rooted","Relevant","Radiant"],
+      S: ["Strong","Simple","Structured","Scientific"],
+      T: ["True","Timeless","Tangible","Thoughtful"],
+      U: ["Unified","Unique","Useful","Universal"],
+      V: ["Vast","Vital","Vivid","Valuable"],
+      W: ["Wise","Whole","Wide","Working"],
+      X: ["Xenial","Xyloid","Xenogenic","X-factor"],
+      Y: ["Young","Yielding","Yearly","Yonder"],
+      Z: ["Zesty","Zealous","Zonal","Zen"]
+    };
+
+    let lines = [`ACROSTIC FOR: ${topic}\n`];
+
+    letters.forEach(letter => {
+      const options = wordBank[letter] || ["Word"];
+      const chosen = randomChoice(options);
+      lines.push(`${letter}${chosen.slice(1)}`);
+    });
+
+    return lines.join("\n");
+  }
+
+  // ---------------------------
+  // ONE-WORD POEM
+  // ---------------------------
+  function generateOneWordPoem(topic) {
+    const words = ["Momentum","Spark","Origin","Pulse","Essence","Catalyst","Shift","Focus","Awakening"];
+    return `ONE-WORD POEM FOR: ${topic}\n\n${randomChoice(words)}`;
+  }
+
+  // ---------------------------
+  // PYRAMID (1 word, 2 words, 3 words)
+  // ---------------------------
+  function generatePyramid(topic) {
+    const one = ["Foundation","Core","Essence","Principle"];
+    const two = ["Key Idea","Major Concept","Central Process","Important Detail"];
+    const three = ["Real World Impact","Why It Matters","How It Works","Big Picture View"];
+
+    return `PYRAMID FOR: ${topic}\n
+1. ${randomChoice(one)}
+2. ${randomChoice(two)}
+3. ${randomChoice(three)}`;
+  }
+
+  // ---------------------------
+  // T-SHIRT CONCEPT
+  // ---------------------------
+  function generateTShirt(topic) {
+    const fronts = [
+      `Bold graphic saying "${topic} Mode"`,
+      `Minimalist icon with "${topic} Crew"`,
+      `Retro text: "${topic} Forever"`,
+      `Comic-style burst: "${topic} Power"`
+    ];
+
+    const backs = [
+      `A simple diagram showing the main idea of ${topic}.`,
+      `A symbol representing the core of ${topic}.`,
+      `A flowchart explaining how ${topic} works.`,
+      `A quote that captures the meaning of ${topic}.`
+    ];
+
+    const p1 = `This T-shirt design connects to ${topic} by turning the idea into a visual symbol students can recognize instantly. The front graphic makes the topic feel bold and memorable. It transforms the lesson into something wearable and expressive.`;
+
+    const p2 = `The back design acts like a portable anchor chart for ${topic}. It highlights the most important parts in a simple, visual way. Anyone who asks about the shirt gives the student a chance to review the topic out loud.`;
+
+    return `T-SHIRT CONCEPT FOR: ${topic}\n
+Front: ${randomChoice(fronts)}
+Back: ${randomChoice(backs)}
+
+Paragraph 1:
+${p1}
+
+Paragraph 2:
+${p2}`;
+  }
+
+  // ---------------------------
+  // MAIN GENERATOR
+  // ---------------------------
+  function generateISN(topic) {
+    const modes = ["acrostic","oneword","pyramid","tshirt"];
+    const mode = randomChoice(modes);
+
+    switch (mode) {
+      case "acrostic": return generateAcrostic(topic);
+      case "oneword": return generateOneWordPoem(topic);
+      case "pyramid": return generatePyramid(topic);
+      case "tshirt": return generateTShirt(topic);
+    }
+  }
+
+  document.getElementById("generateBtn").addEventListener("click", () => {
+    const topic = document.getElementById("topic").value || "My Topic";
+    const output = generateISN(topic);
+    document.getElementById("output").value = output;
+  });
+</script>
+
+</body>
+</html>
