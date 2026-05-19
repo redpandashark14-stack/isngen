@@ -6,8 +6,9 @@
   <style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     label { display: block; margin-top: 10px; }
-    textarea { width: 100%; height: 200px; margin-top: 10px; }
+    textarea { width: 100%; height: 220px; margin-top: 10px; }
     button { margin-top: 15px; padding: 8px 14px; }
+    select, input[type="text"] { margin-top: 5px; }
   </style>
 </head>
 <body>
@@ -16,7 +17,17 @@
 
 <label>
   Topic:
-  <input type="text" id="topic" placeholder="Type your topic here">
+  <input type="text" id="topic" placeholder="e.g., Cells, Energy, Ecosystems">
+</label>
+
+<label>
+  Type:
+  <select id="typeSelect">
+    <option value="acrostic">Acrostic Poem</option>
+    <option value="oneword">One-Word Poem</option>
+    <option value="pyramid">Pyramid (3 topics)</option>
+    <option value="tshirt">T-Shirt Concept</option>
+  </select>
 </label>
 
 <label>
@@ -24,7 +35,7 @@
   <input type="file" id="assignmentFile">
 </label>
 
-<button id="generateBtn">Generate ISN</button>
+<button id="generateBtn">Generate</button>
 
 <h2>Output</h2>
 <textarea id="output" readonly></textarea>
@@ -34,9 +45,7 @@
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  // ---------------------------
-  // ACROSTIC (one word per letter)
-  // ---------------------------
+  // ---------- ACROSTIC (one word per letter) ----------
   function generateAcrostic(topic) {
     const letters = topic.replace(/\s+/g, '').toUpperCase().split('');
     const wordBank = {
@@ -69,41 +78,36 @@
     };
 
     let lines = [`ACROSTIC FOR: ${topic}\n`];
-
     letters.forEach(letter => {
       const options = wordBank[letter] || ["Word"];
       const chosen = randomChoice(options);
+      // One word per letter, starting with that letter
       lines.push(`${letter}${chosen.slice(1)}`);
     });
-
     return lines.join("\n");
   }
 
-  // ---------------------------
-  // ONE-WORD POEM
-  // ---------------------------
+  // ---------- ONE-WORD POEM ----------
   function generateOneWordPoem(topic) {
     const words = ["Momentum","Spark","Origin","Pulse","Essence","Catalyst","Shift","Focus","Awakening"];
     return `ONE-WORD POEM FOR: ${topic}\n\n${randomChoice(words)}`;
   }
 
-  // ---------------------------
-  // PYRAMID (1 word, 2 words, 3 words)
-  // ---------------------------
+  // ---------- PYRAMID (3 topics, 1–3-word descriptions, no long text) ----------
   function generatePyramid(topic) {
-    const one = ["Foundation","Core","Essence","Principle"];
-    const two = ["Key Idea","Major Concept","Central Process","Important Detail"];
-    const three = ["Real World Impact","Why It Matters","How It Works","Big Picture View"];
+    // You can customize these sets per topic if you want
+    const oneWord = ["Life","Matter","Energy","Balance","Change","Motion"];
+    const twoWords = ["Basic Units","Tiny Parts","Moving Energy","Living Systems","Key Idea","Core Concept"];
+    const threeWords = ["Made From Cells","Drives Every Process","Supports All Life","Builds All Organisms","Changes Over Time","Connects Every Level"];
 
-    return `PYRAMID FOR: ${topic}\n
-1. ${randomChoice(one)}
-2. ${randomChoice(two)}
-3. ${randomChoice(three)}`;
+    const line1 = `1. ${topic} — ${randomChoice(oneWord)}`;
+    const line2 = `2. ${topic} — ${randomChoice(twoWords)}`;
+    const line3 = `3. ${topic} — ${randomChoice(threeWords)}`;
+
+    return `PYRAMID FOR: ${topic}\n\n${line1}\n${line2}\n${line3}`;
   }
 
-  // ---------------------------
-  // T-SHIRT CONCEPT
-  // ---------------------------
+  // ---------- T-SHIRT CONCEPT ----------
   function generateTShirt(topic) {
     const fronts = [
       `Bold graphic saying "${topic} Mode"`,
@@ -134,24 +138,24 @@ Paragraph 2:
 ${p2}`;
   }
 
-  // ---------------------------
-  // MAIN GENERATOR
-  // ---------------------------
-  function generateISN(topic) {
-    const modes = ["acrostic","oneword","pyramid","tshirt"];
-    const mode = randomChoice(modes);
-
-    switch (mode) {
-      case "acrostic": return generateAcrostic(topic);
-      case "oneword": return generateOneWordPoem(topic);
-      case "pyramid": return generatePyramid(topic);
-      case "tshirt": return generateTShirt(topic);
-    }
-  }
-
+  // ---------- MAIN HANDLER ----------
   document.getElementById("generateBtn").addEventListener("click", () => {
-    const topic = document.getElementById("topic").value || "My Topic";
-    const output = generateISN(topic);
+    let topic = document.getElementById("topic").value.trim();
+    if (!topic) topic = "My Topic";
+
+    const type = document.getElementById("typeSelect").value;
+    let output = "";
+
+    if (type === "acrostic") {
+      output = generateAcrostic(topic);
+    } else if (type === "oneword") {
+      output = generateOneWordPoem(topic);
+    } else if (type === "pyramid") {
+      output = generatePyramid(topic);
+    } else if (type === "tshirt") {
+      output = generateTShirt(topic);
+    }
+
     document.getElementById("output").value = output;
   });
 </script>
